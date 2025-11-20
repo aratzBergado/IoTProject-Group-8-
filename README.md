@@ -1,1 +1,1 @@
-# IoTProject - WebPage (Group 8)
+# IoTProject (Group 8)
