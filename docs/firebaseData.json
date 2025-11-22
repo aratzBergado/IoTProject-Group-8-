@@ -1,0 +1,92 @@
+{
+  "users": {
+    "user1": {
+      "name": "Mikel",
+      "role": "student",
+      "major": "Engineering",
+      "nationality": "Spain",
+      "email": "mikel@deusto.edu"
+    },
+    "user2": {
+      "name": "Luca",
+      "role": "student",
+      "major": "Psychology",
+      "nationality": "Italy",
+      "email": "luca@deusto.edu"
+    },
+    "user3": {
+      "name": "Elena",
+      "role": "faculty",
+      "department": "Robotics",
+      "email": "elena@deusto.edu"
+    }
+  },
+  "leaderboard": {
+    "user1": {
+      "points": 120,
+      "last_update": "2025-11-20T11:00:00"
+    },
+    "user2": {
+      "points": 95,
+      "last_update": "2025-11-20T10:50:00"
+    },
+    "user3": {
+      "points": 45,
+      "last_update": "2025-11-20T09:30:00"
+    }
+  },
+  "sensors": {
+    "bin_001": {
+      "type": "smart_bin",
+      "ultrasonic_level": 75,
+      "gas_status": "ok",
+      "last_checked": "2025-11-20T11:05:00"
+    },
+    "bin_002": {
+      "type": "smart_bin",
+      "ultrasonic_level": 100,
+      "gas_status": "overflow",
+      "last_checked": "2025-11-20T11:10:00"
+    },
+    "plant_001": {
+      "type": "plant_sensor",
+      "humidity": 30,
+      "water_needed": true,
+      "last_checked": "2025-11-20T10:45:00"
+    },
+    "plant_002": {
+      "type": "plant_sensor",
+      "humidity": 60,
+      "water_needed": false,
+      "last_checked": "2025-11-20T10:50:00"
+    },
+    "motion_cam_001": {
+      "type": "webcam",
+      "motion_detected": true,
+      "last_activity": "2025-11-20T11:15:00"
+    }
+  },
+  "events": {
+    "evt_001": {
+      "type": "litter_pickup",
+      "user": "user1",
+      "points_awarded": 2,
+      "timestamp": "2025-11-20T11:05:00",
+      "location": "Library Path"
+    },
+    "evt_002": {
+      "type": "bin_full",
+      "user": "user3",
+      "points_awarded": 5,
+      "timestamp": "2025-11-20T11:10:00",
+      "location": "Lab 004"
+    },
+    "evt_003": {
+      "type": "plant_watered",
+      "user": "user2",
+      "points_awarded": 3,
+      "timestamp": "2025-11-20T10:50:00",
+      "location": "Cafeteria Garden"
+    }
+  }
+}
