@@ -5,109 +5,152 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>EcoSense Dashboard</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; max-width: 1000px; }
-    header { display:flex; align-items:center; justify-content:space-between; }
+    body { font-family: Arial, sans-serif; margin: 20px; max-width: 1200px; }
+    header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
     .kpi { display:inline-block; padding:10px 14px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-right:10px; }
-    #alerts-list .alert { padding:10px; margin-bottom:8px; border-radius:6px; border-left:6px solid #d9534f; background:#fff6f6; }
     table { width:100%; border-collapse:collapse; margin-top:12px; }
     th, td { padding:8px; border-bottom:1px solid #eee; text-align:left; }
+    .alert { padding:10px; margin-bottom:8px; border-radius:6px; border-left:6px solid #d9534f; background:#fff6f6; }
   </style>
 </head>
 <body>
   <header>
     <h1>EcoSense Dashboard</h1>
     <div>
-      <span class="kpi" id="kpi-points">Puntos: —</span>
-      <span class="kpi" id="kpi-alerts">Alertas: —</span>
+      <span class="kpi" id="kpi-users">Usuarios: —</span>
+      <span class="kpi" id="kpi-events">Eventos: —</span>
     </div>
   </header>
 
   <section>
-    <h2>Alertas recientes</h2>
-    <div id="alerts-list">Cargando alertas...</div>
-  </section>
-
-  <section>
-    <h2>Leaderboard global</h2>
+    <h2>Usuarios</h2>
     <table>
-      <thead><tr><th>Pos</th><th>Usuario</th><th>Puntos</th></tr></thead>
-      <tbody id="leaderboard-body">
-        <tr><td colspan="3">Cargando...</td></tr>
+      <thead>
+        <tr><th>Nombre</th><th>Email</th><th>Major/Dept</th><th>Nacionalidad/Rol</th></tr>
+      </thead>
+      <tbody id="users-body">
+        <tr><td colspan="4">Cargando...</td></tr>
       </tbody>
     </table>
   </section>
 
-  <!-- SDKs Firebase (CDN) -->
+  <section>
+    <h2>Leaderboard</h2>
+    <table>
+      <thead><tr><th>Pos</th><th>Usuario</th><th>Puntos</th><th>Última actualización</th></tr></thead>
+      <tbody id="leaderboard-body">
+        <tr><td colspan="4">Cargando...</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Alertas de sensores</h2>
+    <div id="sensors-alerts">Cargando...</div>
+  </section>
+
+  <section>
+    <h2>Eventos recientes</h2>
+    <div id="events-list">Cargando...</div>
+  </section>
+
+  <!-- SDK Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
-  <!-- main script -->
   <script>
-    // --- Pega aquí TU firebaseConfig obtenido en la consola ---
+    // Configuración Firebase
     const firebaseConfig = {
-      apiKey: "AIzaSyC1aQoAGzHlEa_v_HoyOny_Xvrp2PgWfaE",
-      authDomain: "proyecto-iot---grupo-8.firebaseapp.com",
-      databaseURL: "https://proyecto-iot---grupo-8-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "proyecto-iot---grupo-8",
-      storageBucket: "proyecto-iot---grupo-8.appspot.com",
-      messagingSenderId: "198712694586",
-      appId: "1:198712694586:web:7b09de76a4da738bdb0a25"
+      apiKey: "TU_API_KEY",
+      authDomain: "TU_PROYECTO.firebaseapp.com",
+      databaseURL: "https://TU_PROYECTO-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "TU_PROYECTO",
+      storageBucket: "TU_PROYECTO.appspot.com",
+      messagingSenderId: "TU_MESSAGING_SENDER_ID",
+      appId: "TU_APP_ID"
     };
 
-
-    // Inicializa Firebase (compat mode para usar la API sencilla en una web estática)
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    const rootRef = db.ref('/');
 
-    // Referencias
-    const alertsRef = db.ref('alerts');
-    const leaderboardRef = db.ref('leaderboard/global');
-    const usersRef = db.ref('users');
+    rootRef.on('value', snapshot => {
+      const data = snapshot.val() || {};
 
-    // Funciones de render
-    function renderAlerts(alerts) {
-      const container = document.getElementById('alerts-list');
-      container.innerHTML = '';
-      if (!alerts) { container.textContent = 'No hay alertas.'; return; }
-      // Convertir a array y ordenar por timestamp descendente
-      const arr = Object.entries(alerts).map(([id, a]) => ({ id, ...(a || {}) }));
-      arr.sort((a,b)=> (b.timestamp||0) - (a.timestamp||0));
-      arr.slice(0, 20).forEach(a => {
-        const div = document.createElement('div');
-        div.className = 'alert';
-        div.innerHTML = `<strong>${a.type || 'Alerta'}</strong> — ${a.location || '-'}<br><small>${new Date(a.timestamp||0).toLocaleString()}</small>`;
-        container.appendChild(div);
-      });
-      document.getElementById('kpi-alerts').textContent = 'Alertas: ' + arr.length;
-    }
+      // --- Render usuarios ---
+      const usersBody = document.getElementById('users-body');
+      usersBody.innerHTML = '';
+      if (data.users) {
+        Object.values(data.users).forEach(u => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${u.name || '-'}</td>
+            <td>${u.email || '-'}</td>
+            <td>${u.major || u.department || '-'}</td>
+            <td>${u.nationality || u.role || '-'}</td>
+          `;
+          usersBody.appendChild(tr);
+        });
+        document.getElementById('kpi-users').textContent = 'Usuarios: ' + Object.keys(data.users).length;
+      } else {
+        usersBody.innerHTML = '<tr><td colspan="4">Sin usuarios</td></tr>';
+      }
 
-    function renderLeaderboard(lbObj, usersObj) {
-      const tbody = document.getElementById('leaderboard-body');
-      tbody.innerHTML = '';
-      if (!lbObj) { tbody.innerHTML = '<tr><td colspan="3">Sin datos</td></tr>'; return; }
-      const arr = Object.entries(lbObj).map(([uid, pts]) => ({ uid, pts: pts || 0, name: (usersObj && usersObj[uid] && usersObj[uid].name) || uid }));
-      arr.sort((a,b)=> b.pts - a.pts);
-      let totalPoints = 0;
-      arr.forEach((it, idx) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${idx+1}</td><td>${escapeHtml(it.name)}</td><td>${it.pts}</td>`;
-        tbody.appendChild(tr);
-        totalPoints += Number(it.pts || 0);
-      });
-      document.getElementById('kpi-points').textContent = 'Puntos: ' + totalPoints;
-    }
+      // --- Render leaderboard ---
+      const lbBody = document.getElementById('leaderboard-body');
+      lbBody.innerHTML = '';
+      if (data.leaderboard) {
+        Object.entries(data.leaderboard)
+          .sort((a,b)=> b[1].points - a[1].points)
+          .forEach(([uid, lb], idx) => {
+            const userName = (data.users && data.users[uid] && data.users[uid].name) || uid;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${idx+1}</td><td>${userName}</td><td>${lb.points}</td><td>${lb.last_update}</td>`;
+            lbBody.appendChild(tr);
+          });
+      } else {
+        lbBody.innerHTML = '<tr><td colspan="4">Sin datos</td></tr>';
+      }
 
-    // helper safe
-    function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c])); }
+      // --- Render sensores ---
+      const sensorsDiv = document.getElementById('sensors-alerts');
+      sensorsDiv.innerHTML = '';
+      if (data.sensors) {
+        Object.entries(data.sensors).forEach(([id, s]) => {
+          let text = '';
+          if (s.type === 'plant_sensor' && s.water_needed) {
+            text = `🌱 ${id} necesita agua!`;
+          } else if (s.type === 'smart_bin' && s.gas_status === 'overflow') {
+            text = `🗑️ ${id} está lleno!`;
+          }
+          if (text) {
+            const div = document.createElement('div');
+            div.className = 'alert';
+            div.textContent = text;
+            sensorsDiv.appendChild(div);
+          }
+        });
+      } else {
+        sensorsDiv.textContent = 'Sin sensores activos';
+      }
 
-    // Listeners en tiempo real
-    alertsRef.on('value', snap => renderAlerts(snap.val()));
-    // Para leaderboard necesitamos usuarios para nombres
-    usersRef.on('value', snapUsers => {
-      const users = snapUsers.val();
-      leaderboardRef.on('value', snapLb => renderLeaderboard(snapLb.val(), users));
+      // --- Render eventos ---
+      const eventsDiv = document.getElementById('events-list');
+      eventsDiv.innerHTML = '';
+      if (data.events) {
+        Object.values(data.events)
+          .sort((a,b)=> new Date(b.timestamp) - new Date(a.timestamp))
+          .forEach(ev => {
+            const div = document.createElement('div');
+            div.className = 'alert';
+            div.textContent = `${ev.type} — ${ev.user} — +${ev.points_awarded} pts — ${ev.location} — ${new Date(ev.timestamp).toLocaleString()}`;
+            eventsDiv.appendChild(div);
+          });
+        document.getElementById('kpi-events').textContent = 'Eventos: ' + Object.keys(data.events).length;
+      } else {
+        eventsDiv.textContent = 'Sin eventos';
+      }
     });
-
   </script>
 </body>
 </html>
