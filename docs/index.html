@@ -1,215 +1,224 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EcoSense Dashboard Interactivo</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EcoSense Dashboard</title>
 
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
-<style>
-  body { font-family: 'Roboto', sans-serif; background:#f4f6f8; color:#333; margin:0; padding:20px; }
-  header { display:flex; justify-content:space-between; flex-wrap:wrap; margin-bottom:30px; }
-  h1 { font-size:2rem; color:#2c3e50; }
-
-  .kpi-container { display:flex; flex-wrap:wrap; gap:15px; }
-  .kpi { background:#fff; padding:15px 20px; border-radius:10px; box-shadow:0 3px 8px rgba(0,0,0,0.12); flex:1 1 150px; text-align:center; font-weight:500; }
-
-  section { margin-bottom:30px; }
-  h2 { margin-bottom:15px; color:#34495e; border-bottom:2px solid #ddd; padding-bottom:5px; }
-
-  table { width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
-  th, td { padding:12px 15px; text-align:left; }
-  th { background:#2c3e50; color:#fff; }
-  tr:nth-child(even) { background:#f9f9f9; }
-  tr:hover { background:#e1f5fe; }
-
-  .alert { padding:12px 15px; margin-bottom:10px; border-radius:8px; font-weight:500; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
-  .alert-bin { border-left:6px solid #e74c3c; background:#fff6f6; }
-  .alert-plant { border-left:6px solid #27ae60; background:#f0fff4; }
-  .alert-motion { border-left:6px solid #f39c12; background:#fff8e5; }
-
-  canvas { background:#fff; border-radius:8px; padding:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1); margin-top:10px; }
-
-  @media(max-width:768px){
-    body { padding:10px; }
-    h1 { font-size:1.5rem; }
-    .kpi { font-size:14px; padding:10px; }
-    th, td { font-size:14px; padding:8px; }
-  }
-</style>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; max-width: 1400px; }
+    header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap: wrap; }
+    .kpi { display:inline-block; padding:10px 14px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-right:10px; margin-bottom:5px; }
+    .alert { padding:10px; margin-bottom:8px; border-radius:6px; border-left:6px solid #d9534f; background:#fff6f6; }
+    section { margin-bottom: 40px; }
+    label { font-weight: bold; margin-right: 5px; }
+  </style>
 </head>
 <body>
 
-<header>
+<header class="mb-4">
   <h1>EcoSense Dashboard</h1>
-  <div class="kpi-container">
-    <div class="kpi" id="kpi-users">Usuarios: —</div>
-    <div class="kpi" id="kpi-events">Eventos: —</div>
-    <div class="kpi" id="kpi-points">Puntos Totales: —</div>
+  <div>
+    <span class="kpi" id="kpi-users">Usuarios: —</span>
+    <span class="kpi" id="kpi-events">Eventos: —</span>
   </div>
 </header>
 
-<section>
-  <h2>Leaderboard Global</h2>
-  <canvas id="leaderboardChart" height="100"></canvas>
-</section>
-
-<section>
-  <h2>Alertas de Sensores</h2>
-  <div id="sensors-alerts">Cargando...</div>
-</section>
-
-<section>
-  <h2>Eventos Recientes</h2>
-  <div id="events-list">Cargando...</div>
-</section>
-
+<!-- Usuarios -->
 <section>
   <h2>Usuarios</h2>
-  <table>
-    <thead>
-      <tr><th>Nombre</th><th>Email</th><th>Major/Dept</th><th>Nacionalidad/Rol</th></tr>
-    </thead>
-    <tbody id="users-body"><tr><td colspan="4">Cargando...</td></tr></tbody>
-  </table>
+  <input type="text" id="user-filter" placeholder="Filtrar usuarios por nombre o email..." class="form-control mb-2" style="max-width:400px;">
+  <div class="table-responsive">
+    <table id="users-table" class="table table-striped table-bordered">
+      <thead>
+        <tr><th>Nombre</th><th>Email</th><th>Major/Dept</th><th>Nacionalidad/Rol</th></tr>
+      </thead>
+      <tbody id="users-body"></tbody>
+    </table>
+  </div>
 </section>
 
+<!-- Leaderboard -->
 <section>
-  <h2>Evolución de Puntos</h2>
-  <canvas id="pointsTimelineChart" height="100"></canvas>
+  <h2>Leaderboard</h2>
+  <label>Filtrar por rol: </label>
+  <select id="leaderboard-filter" class="form-select mb-2" style="max-width:200px;">
+    <option value="">Todos</option>
+    <option value="student">Estudiantes</option>
+    <option value="faculty">Profesores</option>
+  </select>
+  <div class="table-responsive">
+    <table id="leaderboard-table" class="table table-striped table-bordered">
+      <thead><tr><th>Pos</th><th>Usuario</th><th>Puntos</th><th>Última actualización</th></tr></thead>
+      <tbody id="leaderboard-body"></tbody>
+    </table>
+  </div>
 </section>
 
-<!-- Firebase -->
+<!-- Sensores -->
+<section>
+  <h2>Alertas de sensores</h2>
+  <label>Mostrar solo alertas: </label>
+  <select id="sensor-filter" class="form-select mb-2" style="max-width:200px;">
+    <option value="all">Todas</option>
+    <option value="needs_action">Necesitan acción</option>
+  </select>
+  <div id="sensors-alerts"></div>
+</section>
+
+<!-- Eventos -->
+<section>
+  <h2>Eventos recientes</h2>
+  <label>Filtrar eventos: </label>
+  <select id="event-filter" class="form-select mb-2" style="max-width:250px;">
+    <option value="">Todos</option>
+    <option value="litter_pickup">Recogida de basura</option>
+    <option value="bin_full">Contenedor lleno</option>
+    <option value="plant_watered">Planta regada</option>
+  </select>
+  <div id="events-list"></div>
+</section>
+
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
+<!-- jQuery y DataTables -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
 <script>
-// Configuración Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyDrlSuQYTDcSD6JTEQ-kOVo4yATvZ2zO7I",
-  authDomain: "proyecto-iot---grupo-8.firebaseapp.com",
-  databaseURL: "https://proyecto-iot---grupo-8-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "proyecto-iot---grupo-8",
-  storageBucket: "proyecto-iot---grupo-8.firebasestorage.app",
-  messagingSenderId: "739127706120",
-  appId: "1:739127706120:web:29fd24907c541e311607bd"
-};
+  // --- Configuración Firebase ---
+  const firebaseConfig = {
+    apiKey: "AIzaSyDrlSuQYTDcSD6JTEQ-kOVo4yATvZ2zO7I",
+    authDomain: "proyecto-iot---grupo-8.firebaseapp.com",
+    databaseURL: "https://proyecto-iot---grupo-8-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "proyecto-iot---grupo-8",
+    storageBucket: "proyecto-iot---grupo-8.firebasestorage.app",
+    messagingSenderId: "739127706120",
+    appId: "1:739127706120:web:29fd24907c541e311607bd"
+  };
+  
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const rootRef = db.ref('/');
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const rootRef = db.ref('/');
+  rootRef.on('value', snapshot => {
+    const data = snapshot.val() || {};
 
-// --- Charts ---
-let leaderboardChart, pointsTimelineChart;
-
-function updateLeaderboard(users, leaderboard){
-  const labels = [];
-  const points = [];
-  Object.entries(leaderboard)
-    .sort((a,b)=> b[1].points - a[1].points)
-    .forEach(([uid, lb])=>{
-      const name = (users && users[uid] && users[uid].name) || uid;
-      labels.push(name);
-      points.push(lb.points);
-    });
-  const ctx = document.getElementById('leaderboardChart').getContext('2d');
-  if(leaderboardChart) leaderboardChart.destroy();
-  leaderboardChart = new Chart(ctx,{
-    type:'bar',
-    data:{ labels, datasets:[{label:'Puntos', data:points, backgroundColor:'#3498db'}] },
-    options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true } } }
-  });
-}
-
-function updatePointsTimeline(users, leaderboard){
-  const labels = Object.keys(users || {});
-  const dataPoints = Object.keys(users || {}).map(uid => leaderboard[uid]?.points || 0);
-  const ctx = document.getElementById('pointsTimelineChart').getContext('2d');
-  if(pointsTimelineChart) pointsTimelineChart.destroy();
-  pointsTimelineChart = new Chart(ctx,{
-    type:'line',
-    data:{
-      labels,
-      datasets:[{
-        label:'Puntos',
-        data:dataPoints,
-        borderColor:'#e67e22',
-        backgroundColor:'rgba(230,126,34,0.2)',
-        tension:0.3,
-        fill:true,
-        pointRadius:5
-      }]
-    },
-    options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true } } }
-  });
-}
-
-// --- Firebase listener ---
-rootRef.on('value', snapshot=>{
-  const data = snapshot.val() || {};
-
-  // KPIs
-  document.getElementById('kpi-users').textContent = 'Usuarios: '+ (data.users ? Object.keys(data.users).length : 0);
-  document.getElementById('kpi-events').textContent = 'Eventos: '+ (data.events ? Object.keys(data.events).length : 0);
-  const totalPoints = data.leaderboard ? Object.values(data.leaderboard).reduce((a,b)=>a+b.points,0) : 0;
-  document.getElementById('kpi-points').textContent = 'Puntos Totales: '+ totalPoints;
-
-  // Leaderboard gráfico
-  updateLeaderboard(data.users, data.leaderboard || {});
-  updatePointsTimeline(data.users, data.leaderboard || {});
-
-  // Sensores
-  const sensorsDiv = document.getElementById('sensors-alerts');
-  sensorsDiv.innerHTML='';
-  if(data.sensors){
-    Object.entries(data.sensors).forEach(([id,s])=>{
-      let div = document.createElement('div');
-      div.className='alert';
-      if(s.type==='plant_sensor' && s.water_needed){
-        div.classList.add('alert-plant');
-        div.textContent=`🌱 ${id} necesita agua!`;
-      } else if(s.type==='smart_bin' && s.gas_status==='overflow'){
-        div.classList.add('alert-bin');
-        div.textContent=`🗑️ ${id} está lleno!`;
-      } else if(s.type==='webcam' && s.motion_detected){
-        div.classList.add('alert-motion');
-        div.textContent=`🎥 ${id} detectó movimiento!`;
-      }
-      if(div.textContent) sensorsDiv.appendChild(div);
-    });
-  } else sensorsDiv.textContent='No hay sensores activos';
-
-  // Eventos
-  const eventsDiv = document.getElementById('events-list');
-  eventsDiv.innerHTML='';
-  if(data.events){
-    Object.values(data.events)
-      .sort((a,b)=> new Date(b.timestamp)-new Date(a.timestamp))
-      .forEach(ev=>{
-        const userName = (data.users && data.users[ev.user] && data.users[ev.user].name) || ev.user;
-        const div = document.createElement('div');
-        div.className='alert';
-        div.textContent=`${ev.type} — ${userName} — +${ev.points_awarded} pts — ${ev.location} — ${new Date(ev.timestamp).toLocaleString()}`;
-        eventsDiv.appendChild(div);
+    // --- Render usuarios ---
+    const usersBody = document.getElementById('users-body');
+    usersBody.innerHTML = '';
+    if(data.users) {
+      Object.values(data.users).forEach(u=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${u.name||'-'}</td><td>${u.email||'-'}</td><td>${u.major||u.department||'-'}</td><td>${u.nationality||u.role||'-'}</td>`;
+        usersBody.appendChild(tr);
       });
-  } else eventsDiv.textContent='No hay eventos';
+      $('#users-table').DataTable().draw(); // refrescar DataTable
+      document.getElementById('kpi-users').textContent = 'Usuarios: ' + Object.keys(data.users).length;
+    }
 
-  // Usuarios tabla
-  const usersBody = document.getElementById('users-body');
-  usersBody.innerHTML='';
-  if(data.users){
-    Object.values(data.users).forEach(u=>{
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${u.name||'-'}</td><td>${u.email||'-'}</td><td>${u.major||u.department||'-'}</td><td>${u.nationality||u.role||'-'}</td>`;
-      usersBody.appendChild(tr);
+    // --- Render leaderboard ---
+    const lbBody = document.getElementById('leaderboard-body');
+    lbBody.innerHTML = '';
+    if(data.leaderboard) {
+      Object.entries(data.leaderboard)
+        .sort((a,b)=> b[1].points - a[1].points)
+        .forEach(([uid, lb], idx)=>{
+          const userName = (data.users && data.users[uid] && data.users[uid].name) || uid;
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${idx+1}</td><td>${userName}</td><td>${lb.points}</td><td>${lb.last_update}</td>`;
+          lbBody.appendChild(tr);
+        });
+      $('#leaderboard-table').DataTable().draw();
+    }
+
+    // --- Render sensores ---
+    const sensorsDiv = document.getElementById('sensors-alerts');
+    sensorsDiv.innerHTML = '';
+    if(data.sensors) {
+      Object.entries(data.sensors).forEach(([id, s])=>{
+        let text = '';
+        if(s.type==='plant_sensor' && s.water_needed) text = `🌱 ${id} necesita agua!`;
+        else if(s.type==='smart_bin' && s.gas_status==='overflow') text = `🗑️ ${id} está lleno!`;
+        if(text){
+          const div = document.createElement('div');
+          div.className = 'alert';
+          div.textContent = text;
+          sensorsDiv.appendChild(div);
+        }
+      });
+    }
+
+    // --- Render eventos ---
+    const eventsDiv = document.getElementById('events-list');
+    eventsDiv.innerHTML = '';
+    if(data.events) {
+      Object.values(data.events)
+        .sort((a,b)=> new Date(b.timestamp)-new Date(a.timestamp))
+        .forEach(ev=>{
+          const div = document.createElement('div');
+          div.className='alert';
+          div.textContent = `${ev.type} — ${ev.user} — +${ev.points_awarded} pts — ${ev.location} — ${new Date(ev.timestamp).toLocaleString()}`;
+          eventsDiv.appendChild(div);
+        });
+      document.getElementById('kpi-events').textContent = 'Eventos: ' + Object.keys(data.events).length;
+    }
+  });
+
+  // --- Inicializar DataTables ---
+  $(document).ready(function(){
+    $('#users-table').DataTable({
+      paging: true,
+      searching: true,
+      info: false,
+      pageLength: 5,
+      lengthChange: false,
+      language: { search: "Buscar:", zeroRecords: "No se encontraron resultados" }
     });
-  } else usersBody.innerHTML='<tr><td colspan="4">Sin usuarios</td></tr>';
-});
+    $('#leaderboard-table').DataTable({
+      paging: true,
+      searching: true,
+      info: false,
+      pageLength: 5,
+      lengthChange: false,
+      order: [[2,'desc']],
+      language: { search: "Buscar:", zeroRecords: "No se encontraron resultados" }
+    });
+
+    // --- Filtros dinámicos ---
+    $('#user-filter').on('keyup', function(){ $('#users-table').DataTable().search(this.value).draw(); });
+    $('#leaderboard-filter').on('change', function(){
+      const val = this.value;
+      const table = $('#leaderboard-table').DataTable();
+      if(val) table.column(1).search(val, true, false).draw();
+      else table.search('').columns().search('').draw();
+    });
+    $('#sensor-filter').on('change', function(){
+      const val = this.value;
+      $('#sensors-alerts').children().each(function(){
+        if(val==='needs_action'){
+          if(!$(this).text().includes('necesita') && !$(this).text().includes('está lleno')) $(this).hide();
+          else $(this).show();
+        } else $(this).show();
+      });
+    });
+    $('#event-filter').on('change', function(){
+      const val = this.value;
+      $('#events-list').children().each(function(){
+        if(val && !$(this).text().includes(val)) $(this).hide();
+        else $(this).show();
+      });
+    });
+  });
 </script>
 
 </body>
