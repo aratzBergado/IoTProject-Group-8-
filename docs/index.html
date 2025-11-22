@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EcoSense Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; max-width: 1000px; }
+    header { display:flex; align-items:center; justify-content:space-between; }
+    .kpi { display:inline-block; padding:10px 14px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-right:10px; }
+    #alerts-list .alert { padding:10px; margin-bottom:8px; border-radius:6px; border-left:6px solid #d9534f; background:#fff6f6; }
+    table { width:100%; border-collapse:collapse; margin-top:12px; }
+    th, td { padding:8px; border-bottom:1px solid #eee; text-align:left; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>EcoSense Dashboard</h1>
+    <div>
+      <span class="kpi" id="kpi-points">Puntos: —</span>
+      <span class="kpi" id="kpi-alerts">Alertas: —</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>Alertas recientes</h2>
+    <div id="alerts-list">Cargando alertas...</div>
+  </section>
+
+  <section>
+    <h2>Leaderboard global</h2>
+    <table>
+      <thead><tr><th>Pos</th><th>Usuario</th><th>Puntos</th></tr></thead>
+      <tbody id="leaderboard-body">
+        <tr><td colspan="3">Cargando...</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- SDKs Firebase (CDN) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <!-- main script -->
+  <script>
+    // --- Pega aquí TU firebaseConfig obtenido en la consola ---
+    const firebaseConfig = {
+      apiKey: "TU_API_KEY",
+      authDomain: "TU_PROYECTO.firebaseapp.com",
+      databaseURL: "https://TU_PROYECTO-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "TU_PROYECTO",
+      storageBucket: "TU_PROYECTO.appspot.com",
+      messagingSenderId: "TU_MESSAGING_SENDER_ID",
+      appId: "TU_APP_ID"
+    };
+
+    // Inicializa Firebase (compat mode para usar la API sencilla en una web estática)
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Referencias
+    const alertsRef = db.ref('alerts');
+    const leaderboardRef = db.ref('leaderboard/global');
+    const usersRef = db.ref('users');
+
+    // Funciones de render
+    function renderAlerts(alerts) {
+      const container = document.getElementById('alerts-list');
+      container.innerHTML = '';
+      if (!alerts) { container.textContent = 'No hay alertas.'; return; }
+      // Convertir a array y ordenar por timestamp descendente
+      const arr = Object.entries(alerts).map(([id, a]) => ({ id, ...(a || {}) }));
+      arr.sort((a,b)=> (b.timestamp||0) - (a.timestamp||0));
+      arr.slice(0, 20).forEach(a => {
+        const div = document.createElement('div');
+        div.className = 'alert';
+        div.innerHTML = `<strong>${a.type || 'Alerta'}</strong> — ${a.location || '-'}<br><small>${new Date(a.timestamp||0).toLocaleString()}</small>`;
+        container.appendChild(div);
+      });
+      document.getElementById('kpi-alerts').textContent = 'Alertas: ' + arr.length;
+    }
+
+    function renderLeaderboard(lbObj, usersObj) {
+      const tbody = document.getElementById('leaderboard-body');
+      tbody.innerHTML = '';
+      if (!lbObj) { tbody.innerHTML = '<tr><td colspan="3">Sin datos</td></tr>'; return; }
+      const arr = Object.entries(lbObj).map(([uid, pts]) => ({ uid, pts: pts || 0, name: (usersObj && usersObj[uid] && usersObj[uid].name) || uid }));
+      arr.sort((a,b)=> b.pts - a.pts);
+      let totalPoints = 0;
+      arr.forEach((it, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${idx+1}</td><td>${escapeHtml(it.name)}</td><td>${it.pts}</td>`;
+        tbody.appendChild(tr);
+        totalPoints += Number(it.pts || 0);
+      });
+      document.getElementById('kpi-points').textContent = 'Puntos: ' + totalPoints;
+    }
+
+    // helper safe
+    function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c])); }
+
+    // Listeners en tiempo real
+    alertsRef.on('value', snap => renderAlerts(snap.val()));
+    // Para leaderboard necesitamos usuarios para nombres
+    usersRef.on('value', snapUsers => {
+      const users = snapUsers.val();
+      leaderboardRef.on('value', snapLb => renderLeaderboard(snapLb.val(), users));
+    });
+
+  </script>
+</body>
+</html>
