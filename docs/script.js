@@ -26,74 +26,147 @@ let leaderboardTable = $('#leaderboard-table').DataTable({
 rootRef.on('value', snapshot => {
   const data = snapshot.val() || {};
 
-  // Render Usuarios
+  // -----------------------
+  // RENDER USUARIOS
+  // -----------------------
   usersTable.clear();
   if(data.users){
     Object.values(data.users).forEach(u => {
-      usersTable.row.add([u.name||'-', u.email||'-', u.major||u.department||'-', u.nationality||u.role||'-']);
+      usersTable.row.add([
+        u.name || '-',
+        u.email || '-',
+        u.major || u.department || '-',
+        u.nationality || u.role || '-'
+      ]);
     });
     document.getElementById('kpi-users').textContent = 'Usuarios: ' + Object.keys(data.users).length;
   }
   usersTable.draw();
 
-  // Render Leaderboard
+
+  // -----------------------
+  // RENDER LEADERBOARD
+  // -----------------------
   leaderboardTable.clear();
   if(data.leaderboard){
     Object.entries(data.leaderboard)
-      .sort((a,b)=> b[1].points - a[1].points)
+      .sort((a,b) => b[1].points - a[1].points)
       .forEach(([uid, lb], idx) => {
-        const userName = (data.users && data.users[uid] && data.users[uid].name) || uid;
-        leaderboardTable.row.add([idx+1, userName, lb.points, lb.last_update]);
+        const userName = (data.users?.[uid]?.name) || uid;
+        leaderboardTable.row.add([
+          idx+1,
+          userName,
+          lb.points,
+          lb.last_update
+        ]);
       });
   }
   leaderboardTable.draw();
 
-  // Render Sensores
+
+  // -----------------------
+  // RENDER SENSORES
+  // -----------------------
   const sensorsDiv = document.getElementById('sensors-alerts');
   sensorsDiv.innerHTML = '';
+
   if(data.sensors){
-    Object.entries(data.sensors).forEach(([id,s])=>{
-      let text='';
-      if(s.type==='plant_sensor' && s.water_needed) text=`🌱 ${id} necesita agua!`;
-      else if(s.type==='smart_bin' && s.gas_status==='overflow') text=`🗑️ ${id} está lleno!`;
+    Object.entries(data.sensors).forEach(([id, s]) => {
+      let text = '';
+
+      if(s.type === 'plant_sensor' && s.water_needed)
+        text = `🌱 ${id} necesita agua!`;
+
+      else if(s.type === 'smart_bin' && s.gas_status === 'overflow')
+        text = `🗑️ ${id} está lleno!`;
+
       if(text){
-        const div=document.createElement('div'); div.className='alert'; div.textContent=text; sensorsDiv.appendChild(div);
+        const div = document.createElement('div');
+        div.className = 'alert';
+        div.textContent = text;
+        sensorsDiv.appendChild(div);
       }
     });
-  } else sensorsDiv.textContent='Sin sensores activos';
+  } else {
+    sensorsDiv.textContent = 'Sin sensores activos';
+  }
 
-  // Render Eventos
+
+  // -----------------------
+  // RENDER EVENTOS
+  // -----------------------
   const eventsDiv = document.getElementById('events-list');
-  eventsDiv.innerHTML='';
+  eventsDiv.innerHTML = '';
+
   if(data.events){
     Object.values(data.events)
-      .sort((a,b)=> new Date(b.timestamp)-new Date(a.timestamp))
-      .forEach(ev=>{
-        const div=document.createElement('div'); div.className='alert';
-        div.textContent=`${ev.type} — ${ev.user} — +${ev.points_awarded} pts — ${ev.location} — ${new Date(ev.timestamp).toLocaleString()}`;
+      .sort((a,b)=> new Date(b.timestamp) - new Date(a.timestamp))
+      .forEach(ev => {
+        const div = document.createElement('div');
+        div.className = 'alert';
+        div.textContent = `${ev.type} — ${ev.user} — +${ev.points_awarded} pts — ${ev.location} — ${new Date(ev.timestamp).toLocaleString()}`;
         eventsDiv.appendChild(div);
       });
-    document.getElementById('kpi-events').textContent='Eventos: '+Object.keys(data.events).length;
-  } else eventsDiv.textContent='Sin eventos';
 
-  // --- Render gráfico Leaderboard ---
-  const ctx = document.getElementById('leaderboardChart').getContext('2d');
-  const labels = data.leaderboard ? Object.entries(data.leaderboard).map(([uid, lb]) => (data.users[uid]?.name || uid)) : [];
-  const points = data.leaderboard ? Object.values(data.leaderboard).map(lb => lb.points) : [];
+    document.getElementById('kpi-events').textContent = 'Eventos: ' + Object.keys(data.events).length;
+  } else {
+    eventsDiv.textContent = 'Sin eventos';
+  }
 
-  if(window.leaderboardChart) window.leaderboardChart.destroy();
-  window.leaderboardChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Puntos',
-        data: points,
-        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1
-      }]
-    },
-    options: { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} }
-  });
+
+  // -----------------------
+  // RENDER GRÁFICO CHART.JS
+  // -----------------------
+  try {
+    const canvas = document.getElementById('leaderboardChart');
+    if(!canvas){
+      console.error("Canvas del gráfico NO encontrado");
+      return;
+    }
+
+    const ctx = canvas.getContext('2d');
+
+    // Datos del leaderboard
+    const leaderboard = data.leaderboard || {};
+    const users = data.users || {};
+
+    const labels = Object.keys(leaderboard).map(uid =>
+      users[uid]?.name || uid
+    );
+
+    const points = Object.keys(leaderboard).map(uid =>
+      leaderboard[uid]?.points || 0
+    );
+
+    // 💥 EVITAR ERROR destroy()
+    if (window.leaderboardChart && typeof window.leaderboardChart.destroy === "function") {
+      window.leaderboardChart.destroy();
+    }
+
+    // Crear nuevo gráfico
+    window.leaderboardChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Puntos',
+          data: points,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+
+    console.log("Gráfico creado correctamente");
+
+  } catch (err) {
+    console.error("Error creando el gráfico:", err);
+  }
+
 });
