@@ -1,0 +1,17 @@
+/* Cards, alerts y badges */
+.kpi-small{background:var(--card);padding:8px;border-radius:10px;box-shadow:0 6px 18px rgba(31,87,52,0.05)}
+.table thead th{color:var(--accent);font-weight:700}
+.list-item{padding:8px;border-radius:8px;background:linear-gradient(180deg, #fff, #f6fbf6)}
+.badge-role{padding:4px 8px;border-radius:999px;font-size:12px}
+.badge-student{background:#d6f5e0;color:#1b6a36}
+.badge-faculty{background:#e8f0e8;color:#276142}
+
+
+/* Scrollbars */
+.alerts-list::-webkit-scrollbar, .list-stack::-webkit-scrollbar{width:8px}
+.alerts-list::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.12);border-radius:6px}
+
+
+/* Animations */
+.alert-item{transition:transform .22s ease, box-shadow .22s ease}
+.alert-item:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(18,56,30,0.12)}
