@@ -76,7 +76,6 @@ function initCharts() {
         });
     }
 }
-document.addEventListener("DOMContentLoaded", initCharts);
 
 // ==============================
 // Theme toggle
@@ -217,10 +216,15 @@ document.addEventListener("keydown", e=>{
     }
 });
 
-document.addEventListener("DOMContentLoaded", ()=>{
+document.addEventListener("DOMContentLoaded", () => {
+    // Inicializar charts
+    initCharts();
+
+    // Inicializar tooltips
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(t=>new bootstrap.Tooltip(t));
+    tooltipTriggerList.map(t => new bootstrap.Tooltip(t));
 });
+
 
 
 const usersData = {}; // Guardar usuarios globalmente
