@@ -19,6 +19,11 @@ body.dark{
   color:#f3f3f3;
 }
 
+#users-table {
+  margin-top: 24px; /* ajusta el valor a tu gusto */
+}
+
+
 .container-main{max-width:1200px; margin:22px auto; padding:0 16px}
 
 .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
