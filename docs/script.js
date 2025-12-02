@@ -157,33 +157,26 @@ function updateSensors(sensors) {
     const alertsDiv = document.getElementById("sensors-alerts");
     if(!alertsDiv) return;
     alertsDiv.innerHTML = "";
-    let alertCount = 0;
-    let green = 0, orange = 0, red = 0;
+    let alertCount = 0, green=0, orange=0, red=0;
 
     Object.entries(sensors).forEach(([id, s]) => {
-        let text = "";
-        if (s.type === "plant_sensor") {
-            if(s.water_needed){
-                text = `🌱 ${id} necesita agua!`;
-                red++;
-            } else green++;
-        } else if (s.type === "smart_bin") {
-            if(s.gas_status === "overflow"){
-                text = `🗑️ ${id} está lleno!`;
-                red++;
-            } else if(s.ultrasonic_level >= 75){
-                text = `🗑️ ${id} casi lleno!`;
-                orange++;
-            } else green++;
-        } else {
-            green++;
-        }
+        let text = "", className = "alert-green";
 
-        if (text) {
+        if(s.type==="plant_sensor"){
+            if(s.water_needed){ text=`🌱 ${id} necesita agua!`; red++; className="alert-red"; }
+            else green++;
+        } else if(s.type==="smart_bin"){
+            if(s.gas_status==="overflow"){ text=`🗑️ ${id} está lleno!`; red++; className="alert-red"; }
+            else if(s.ultrasonic_level>=75){ text=`🗑️ ${id} casi lleno!`; orange++; className="alert-orange"; }
+            else green++;
+        } else green++;
+
+        if(text){
             alertCount++;
             const div = document.createElement("div");
-            div.className = "alert alert-item";
+            div.className = `alert alert-item ${className}`;
             div.textContent = text;
+            div.addEventListener("click", ()=>alert(`Detalles del sensor ${id}: ${JSON.stringify(s)}`));
             alertsDiv.appendChild(div);
         }
     });
@@ -191,23 +184,24 @@ function updateSensors(sensors) {
     const kpiSensors = document.getElementById("kpi-sensors");
     if(kpiSensors) kpiSensors.textContent = alertCount;
 
-    if (sensorsDonutChart) {
-        sensorsDonutChart.data.datasets[0].data = [green, orange, red];
+    if(sensorsDonutChart){
+        sensorsDonutChart.data.datasets[0].data=[green, orange, red];
         sensorsDonutChart.update();
     }
 }
+
 
 function updateEvents(events, users) {
     const eventsDiv = document.getElementById("events-list");
     if(!eventsDiv) return;
     eventsDiv.innerHTML = "";
 
-    const sorted = Object.values(events).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    const sorted = Object.values(events).sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
 
     sorted.forEach(ev => {
         const userName = users[ev.user]?.name || ev.user;
         const div = document.createElement("div");
-        div.className = "alert alert-item";
+        div.className = "alert alert-item alert-green";
         div.textContent = `${ev.type} — ${userName} — +${ev.points_awarded} pts — ${ev.location} — ${new Date(ev.timestamp).toLocaleString()}`;
         eventsDiv.appendChild(div);
     });
@@ -215,3 +209,28 @@ function updateEvents(events, users) {
     const kpiEvents = document.getElementById("kpi-events");
     if(kpiEvents) kpiEvents.textContent = sorted.length;
 }
+
+
+document.addEventListener("keydown", e=>{
+    if(e.key.toLowerCase()==='t'){
+        themeToggle.click();
+    }
+});
+
+document.addEventListener("DOMContentLoaded", ()=>{
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(t=>new bootstrap.Tooltip(t));
+});
+
+
+const usersData = {}; // Guardar usuarios globalmente
+
+db.ref('/users').on("value", snapshot => {
+    const users = snapshot.val() || {};
+    Object.assign(usersData, users); // actualizar global
+    updateUsersTable(users);
+});
+
+db.ref('/leaderboard').on("value", snapshot => updateLeaderboard(usersData, snapshot.val() || {}));
+db.ref('/sensors').on("value", snapshot => updateSensors(snapshot.val() || {}));
+db.ref('/events').on("value", snapshot => updateEvents(snapshot.val() || {}, usersData));
