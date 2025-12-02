@@ -12,13 +12,20 @@ body{
   margin:0;
   background:var(--bg);
   color:#112;
+  transition: background 0.3s, color 0.3s;
 }
+body.dark{
+  background:#111;
+  color:#f3f3f3;
+}
+
 .container-main{max-width:1200px; margin:22px auto; padding:0 16px}
 
 .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.kpi-card{background:var(--card);border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 8px 20px rgba(47,122,74,0.06)}
+.kpi-card{background:var(--card);border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 8px 20px rgba(47,122,74,0.06);transition:0.3s;}
+.kpi-card:hover{transform:scale(1.02);}
 .kpi-label{font-size:12px;color:var(--muted)}
 .kpi-number{font-size:20px;font-weight:700}
 
-.alert{padding:12px;margin-bottom:10px;border-radius:8px;border-left:6px solid var(--danger);background:#ffecec;font-weight:500;}
-.alert:hover{transform:scale(1.02);cursor:pointer;transition:0.2s;}
+.alert{padding:12px;margin-bottom:10px;border-radius:8px;border-left:6px solid var(--danger);background:#ffecec;font-weight:500;transition:0.2s;}
+.alert:hover{transform:scale(1.02);cursor:pointer;}

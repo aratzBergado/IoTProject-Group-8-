@@ -1,6 +1,3 @@
-// ==============================
-// Funciones para crear gráficos
-// ==============================
 (function(){
 window.createLeaderboardChart = function(ctx, labels, points){
     if(!ctx) return null;
@@ -17,7 +14,7 @@ window.createSensorsDonut = function(ctx, dataArr, labels){
     if(window.sensorsDonutChart?.destroy) window.sensorsDonutChart.destroy();
     return new Chart(ctx, {
         type:'doughnut',
-        data:{ labels, datasets:[{ data:dataArr, backgroundColor:['#2f7a4a','#89c47b','#e05757'] }] },
+        data:{ labels, datasets:[{ data:dataArr, backgroundColor:['#2f7a4a','#f3b46b','#e05757'] }] },
         options:{ responsive:true, plugins:{legend:{position:'bottom'}} }
     });
 };
