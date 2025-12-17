@@ -1,0 +1,249 @@
+[2025-12-15 16:12:36] 🚀 Iniciando auto-uploader
+[2025-12-15 16:12:36] 🔄 Ejecutando upload_data.py...
+[2025-12-15 16:12:38] 📊 RESULTADO: ❌ Error
+[2025-12-15 16:12:38]    ⚠️  Errores: 9 líneas
+
+--- OUTPUT COMPLETO ---
+
+============================================================
+
+--- ERRORES ---
+Traceback (most recent call last):
+  File "C:\Users\Ander Pala\WorkFolder\Deusto\IOT\IoTProject-Group-8-\docs\upload_data.py", line 507, in <module>
+    main()
+  File "C:\Users\Ander Pala\WorkFolder\Deusto\IOT\IoTProject-Group-8-\docs\upload_data.py", line 467, in main
+    print("\U0001f680 INICIANDO SUBIDA DE DATOS A FIREBASE")
+  File "C:\Users\Ander Pala\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f680' in position 0: character maps to <undefined>
+
+==================================================
+[2025-12-15 16:13:38] 🔄 Ejecutando upload_data.py...
+[2025-12-15 16:13:39] 📊 RESULTADO: ❌ Error
+[2025-12-15 16:13:39]    ⚠️  Errores: 9 líneas
+
+--- OUTPUT COMPLETO ---
+
+============================================================
+
+--- ERRORES ---
+Traceback (most recent call last):
+  File "C:\Users\Ander Pala\WorkFolder\Deusto\IOT\IoTProject-Group-8-\docs\upload_data.py", line 507, in <module>
+    main()
+  File "C:\Users\Ander Pala\WorkFolder\Deusto\IOT\IoTProject-Group-8-\docs\upload_data.py", line 467, in main
+    print("\U0001f680 INICIANDO SUBIDA DE DATOS A FIREBASE")
+  File "C:\Users\Ander Pala\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f680' in position 0: character maps to <undefined>
+
+==================================================
+[2025-12-15 16:14:39] 🔄 Ejecutando upload_data.py...
+[2025-12-15 16:14:41] 📊 RESULTADO: ❌ Error
+[2025-12-15 16:14:41]    ⚠️  Errores: 9 líneas
+
+--- OUTPUT COMPLETO ---
+
+============================================================
+
+--- ERRORES ---
+Traceback (most recent call last):
+  File "C:\Users\Ander Pala\WorkFolder\Deusto\IOT\IoTProject-Group-8-\docs\upload_data.py", line 507, in <module>
+    main()
+  File "C:\Users\Ander Pala\WorkFolder\Deusto\IOT\IoTProject-Group-8-\docs\upload_data.py", line 467, in main
+    print("\U0001f680 INICIANDO SUBIDA DE DATOS A FIREBASE")
+  File "C:\Users\Ander Pala\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f680' in position 0: character maps to <undefined>
+
+==================================================
+[2025-12-15 16:15:41] 🔄 Ejecutando upload_data.py...
+[2025-12-15 16:15:42] 📊 RESULTADO: ❌ Error
+[2025-12-15 16:15:42]    ⚠️  Errores: 9 líneas
+
+--- OUTPUT COMPLETO ---
+
+============================================================
+
+--- ERRORES ---
+Traceback (most recent call last):
+  File "C:\Users\Ander Pala\WorkFolder\Deusto\IOT\IoTProject-Group-8-\docs\upload_data.py", line 507, in <module>
+    main()
+  File "C:\Users\Ander Pala\WorkFolder\Deusto\IOT\IoTProject-Group-8-\docs\upload_data.py", line 467, in main
+    print("\U0001f680 INICIANDO SUBIDA DE DATOS A FIREBASE")
+  File "C:\Users\Ander Pala\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f680' in position 0: character maps to <undefined>
+
+==================================================
+[2025-12-15 16:16:25] 
+🛑 Auto-uploader detenido por el usuario (Ctrl+C)
+[2025-12-15 16:16:25] 📊 Estadísticas finales:
+[2025-12-15 16:16:25]    Total ejecuciones: 4
+[2025-12-15 16:16:25]    Éxitos: 0
+[2025-12-15 16:16:25]    Fallos: 4
+[2025-12-15 16:16:25]    Tasa de éxito: 0.0%
+[2025-12-15 16:16:25] 👋 Auto-uploader finalizado
+[2025-12-15 16:18:22]  Iniciando auto-uploader
+[2025-12-15 16:18:22] Ejecutando upload_data.py...
+[2025-12-15 16:18:26] RESULTADO:  Éxito
+[2025-12-15 16:18:26]    Usuarios: 3 documentos
+[2025-12-15 16:18:26]     Total: 3 documentos
+[2025-12-15 16:18:26]     Errores: 6 líneas
+[2025-12-15 16:19:26] Ejecutando upload_data.py...
+[2025-12-15 16:19:29] RESULTADO:  Éxito
+[2025-12-15 16:19:29]    Usuarios: 3 documentos
+[2025-12-15 16:19:29]     Total: 3 documentos
+[2025-12-15 16:19:29]     Errores: 6 líneas
+[2025-12-15 16:19:35] 
+ Auto-uploader detenido por el usuario (Ctrl+C)
+[2025-12-15 16:19:35]  Estadísticas finales:
+[2025-12-15 16:19:35]    Total ejecuciones: 2
+[2025-12-15 16:19:35]    Éxitos: 2
+[2025-12-15 16:19:35]    Fallos: 0
+[2025-12-15 16:19:35]    Tasa de éxito: 100.0%
+[2025-12-15 16:19:35]  Auto-uploader finalizado
+[2025-12-15 16:20:54]  Iniciando auto-uploader
+[2025-12-15 16:20:54] Ejecutando upload_data.py...
+[2025-12-15 16:20:57] RESULTADO:  Éxito
+[2025-12-15 16:20:57]    Usuarios: 3 documentos
+[2025-12-15 16:20:57]     Total: 3 documentos
+[2025-12-15 16:20:57]     Errores: 6 líneas
+[2025-12-15 16:21:57] Ejecutando upload_data.py...
+[2025-12-15 16:22:00] RESULTADO:  Éxito
+[2025-12-15 16:22:00]    Usuarios: 3 documentos
+[2025-12-15 16:22:00]     Total: 3 documentos
+[2025-12-15 16:22:00]     Errores: 6 líneas
+[2025-12-15 16:23:01] Ejecutando upload_data.py...
+[2025-12-15 16:23:04] RESULTADO:  Éxito
+[2025-12-15 16:23:04]    Usuarios: 6 documentos
+[2025-12-15 16:23:04]     Total: 6 documentos
+[2025-12-15 16:23:04]     Errores: 6 líneas
+[2025-12-15 16:24:04] Ejecutando upload_data.py...
+[2025-12-15 16:24:07] RESULTADO:  Éxito
+[2025-12-15 16:24:07]    Usuarios: 6 documentos
+[2025-12-15 16:24:07]     Total: 6 documentos
+[2025-12-15 16:24:07]     Errores: 6 líneas
+[2025-12-15 16:24:50] 
+ Auto-uploader detenido por el usuario (Ctrl+C)
+[2025-12-15 16:24:50]  Estadísticas finales:
+[2025-12-15 16:24:50]    Total ejecuciones: 4
+[2025-12-15 16:24:50]    Éxitos: 4
+[2025-12-15 16:24:50]    Fallos: 0
+[2025-12-15 16:24:50]    Tasa de éxito: 100.0%
+[2025-12-15 16:24:50]  Auto-uploader finalizado
+[2025-12-15 16:34:31]  Iniciando auto-uploader
+[2025-12-15 16:34:31] Ejecutando upload_data.py...
+[2025-12-15 16:34:50] 
+ Auto-uploader detenido por el usuario (Ctrl+C)
+[2025-12-15 16:34:50]  Estadísticas finales:
+[2025-12-15 16:34:50]    Total ejecuciones: 0
+[2025-12-15 16:34:50]    Éxitos: 0
+[2025-12-15 16:34:50]    Fallos: 0
+[2025-12-15 16:34:50]    Tasa de éxito: 0.0%
+[2025-12-15 16:34:50]  Auto-uploader finalizado
+[2025-12-15 16:35:25]  Iniciando auto-uploader
+[2025-12-15 16:35:25] Ejecutando upload_data.py...
+[2025-12-15 16:35:44] RESULTADO:  Éxito
+[2025-12-15 16:35:44]    Sensores: 252 documentos
+[2025-12-15 16:35:44]    Usuarios: 6 documentos
+[2025-12-15 16:35:45]     Total: 258 documentos
+[2025-12-15 16:35:45]     Errores: 6 líneas
+[2025-12-15 16:36:45] Ejecutando upload_data.py...
+[2025-12-15 16:36:48] 
+ Auto-uploader detenido por el usuario (Ctrl+C)
+[2025-12-15 16:36:48]  Estadísticas finales:
+[2025-12-15 16:36:48]    Total ejecuciones: 1
+[2025-12-15 16:36:48]    Éxitos: 1
+[2025-12-15 16:36:48]    Fallos: 0
+[2025-12-15 16:36:48]    Tasa de éxito: 100.0%
+[2025-12-15 16:36:48]  Auto-uploader finalizado
+[2025-12-15 16:38:29]  Iniciando auto-uploader
+[2025-12-15 16:38:29] Ejecutando upload_data.py...
+[2025-12-15 16:38:39] RESULTADO:  Éxito
+[2025-12-15 16:38:39]    Sensores: 88 documentos
+[2025-12-15 16:38:39]    Usuarios: 6 documentos
+[2025-12-15 16:38:39]     Total: 94 documentos
+[2025-12-15 16:38:39]     Errores: 6 líneas
+[2025-12-15 16:39:39] Ejecutando upload_data.py...
+[2025-12-15 16:40:53] RESULTADO:  Éxito
+[2025-12-15 16:40:53]    Sensores: 1124 documentos
+[2025-12-15 16:40:53]    Usuarios: 6 documentos
+[2025-12-15 16:40:53]     Total: 1130 documentos
+[2025-12-15 16:40:53]     Errores: 6 líneas
+[2025-12-15 16:40:58] 
+ Auto-uploader detenido por el usuario (Ctrl+C)
+[2025-12-15 16:40:58]  Estadísticas finales:
+[2025-12-15 16:40:58]    Total ejecuciones: 2
+[2025-12-15 16:40:58]    Éxitos: 2
+[2025-12-15 16:40:58]    Fallos: 0
+[2025-12-15 16:40:58]    Tasa de éxito: 100.0%
+[2025-12-15 16:40:58]  Auto-uploader finalizado
+[2025-12-15 16:43:28]  Iniciando auto-uploader
+[2025-12-15 16:43:28] Ejecutando upload_data.py...
+[2025-12-15 16:47:36] 
+ Auto-uploader detenido por el usuario (Ctrl+C)
+[2025-12-15 16:47:36]  Estadísticas finales:
+[2025-12-15 16:47:36]    Total ejecuciones: 0
+[2025-12-15 16:47:36]    Éxitos: 0
+[2025-12-15 16:47:36]    Fallos: 0
+[2025-12-15 16:47:36]    Tasa de éxito: 0.0%
+[2025-12-15 16:47:36]  Auto-uploader finalizado
+[2025-12-15 16:47:40]  Iniciando auto-uploader
+[2025-12-15 16:47:40] Ejecutando upload_data.py...
+[2025-12-15 16:47:49] 
+ Auto-uploader detenido por el usuario (Ctrl+C)
+[2025-12-15 16:47:49]  Estadísticas finales:
+[2025-12-15 16:47:49]    Total ejecuciones: 0
+[2025-12-15 16:47:49]    Éxitos: 0
+[2025-12-15 16:47:49]    Fallos: 0
+[2025-12-15 16:47:49]    Tasa de éxito: 0.0%
+[2025-12-15 16:47:49]  Auto-uploader finalizado
+[2025-12-15 16:48:19]  Iniciando auto-uploader
+[2025-12-15 16:48:19] Ejecutando upload_data.py...
+[2025-12-15 16:49:13] 
+ Auto-uploader detenido por el usuario (Ctrl+C)
+[2025-12-15 16:49:13]  Estadísticas finales:
+[2025-12-15 16:49:13]    Total ejecuciones: 0
+[2025-12-15 16:49:13]    Éxitos: 0
+[2025-12-15 16:49:13]    Fallos: 0
+[2025-12-15 16:49:13]    Tasa de éxito: 0.0%
+[2025-12-15 16:49:13]  Auto-uploader finalizado
+[2025-12-15 16:51:27]  Iniciando auto-uploader
+[2025-12-15 16:51:27] Ejecutando upload_data.py...
+[2025-12-15 16:53:15] 
+ Auto-uploader detenido por el usuario (Ctrl+C)
+[2025-12-15 16:53:15]  Estadísticas finales:
+[2025-12-15 16:53:15]    Total ejecuciones: 0
+[2025-12-15 16:53:15]    Éxitos: 0
+[2025-12-15 16:53:15]    Fallos: 0
+[2025-12-15 16:53:15]    Tasa de éxito: 0.0%
+[2025-12-15 16:53:15]  Auto-uploader finalizado
+[2025-12-15 16:54:55]  Iniciando auto-uploader
+[2025-12-15 16:54:55] Ejecutando upload_data.py...
+[2025-12-15 16:56:44] 
+ Auto-uploader detenido por el usuario (Ctrl+C)
+[2025-12-15 16:56:44]  Estadísticas finales:
+[2025-12-15 16:56:44]    Total ejecuciones: 0
+[2025-12-15 16:56:44]    Éxitos: 0
+[2025-12-15 16:56:44]    Fallos: 0
+[2025-12-15 16:56:44]    Tasa de éxito: 0.0%
+[2025-12-15 16:56:44]  Auto-uploader finalizado
+[2025-12-15 17:06:15]  Iniciando auto-uploader
+[2025-12-15 17:06:15] Ejecutando upload_data.py...
+[2025-12-15 17:06:22] RESULTADO:  Éxito
+[2025-12-15 17:06:22]    Sensores: 68 documentos
+[2025-12-15 17:06:22]    Usuarios: 6 documentos
+[2025-12-15 17:06:22]     Total: 74 documentos
+[2025-12-15 17:06:22]     Errores: 6 líneas
+[2025-12-15 17:06:27] 
+ Auto-uploader detenido por el usuario (Ctrl+C)
+[2025-12-15 17:06:27]  Estadísticas finales:
+[2025-12-15 17:06:27]    Total ejecuciones: 1
+[2025-12-15 17:06:27]    Éxitos: 1
+[2025-12-15 17:06:27]    Fallos: 0
+[2025-12-15 17:06:27]    Tasa de éxito: 100.0%
+[2025-12-15 17:06:27]  Auto-uploader finalizado
