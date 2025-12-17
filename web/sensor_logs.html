@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoSense - Sensor Data</title>
+  <!--CSS-->
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f0f2f5; }
+    h1 { color: #1a73e8; margin-bottom: 30px; }
+    .loading { color: #666; font-size: 18px; }
+    
+    .tabs { display: flex; gap: 5px; margin-bottom: 20px; border-bottom: 2px solid #ddd; padding-bottom: 0; }
+    .tab { padding: 12px 20px; background: #f5f5f5; border: none; border-radius: 8px 8px 0 0; cursor: pointer; font-weight: 500; }
+    .tab.active { background: #1a73e8; color: white; }
+    .tab:hover:not(.active) { background: #e0e0e0; }
+    
+    .table-container { display: none; }
+    .table-container.active { display: block; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+    th { background: #1a73e8; color: white; }
+    tr:hover { background: #f5f9ff; }
+  </style>
+</head>
+<body>
+
+  <h1>📊 EcoSense Sensor Data</h1>
+  
+  <div class="tabs">
+    <button class="tab active" data-collection="distance">📏 Distance</button>
+    <button class="tab" data-collection="gas">⚗️ Gas</button>
+    <button class="tab" data-collection="button">🔘 Button</button>
+    <button class="tab" data-collection="moisture">💧 Moisture</button>
+  </div>
+
+  <p class="loading">Loading data from Firebase...</p>
+
+  <!-- Distance Table -->
+  <div id="distanceTable" class="table-container active">
+    <h2>Distance Sensor Data</h2>
+    <table>
+      <thead><tr></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Gas Table -->
+  <div id="gasTable" class="table-container">
+    <h2>Gas Sensor Data</h2>
+    <table>
+      <thead><tr></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Button Table -->
+  <div id="buttonTable" class="table-container">
+    <h2>Button Sensor Data</h2>
+    <table>
+      <thead><tr></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Moisture Table -->
+  <div id="moistureTable" class="table-container">
+    <h2>Moisture Sensor Data</h2>
+    <table>
+      <thead><tr></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDrlSuQYTDcSD6JTEQ-kOVo4yATvZ2zO7I",
+      authDomain: "proyecto-iot---grupo-8.firebaseapp.com",
+      databaseURL: "https://proyecto-iot---grupo-8-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "proyecto-iot---grupo-8",
+      storageBucket: "proyecto-iot---grupo-8.firebasestorage.app",
+      messagingSenderId: "739127706120",
+      appId: "1:739127706120:web:29fd24907c541e311607bd"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Column configurations for each collection
+    const columnConfig = {
+      distance: ["timestamp", "distance_cm", "sensor_type"],
+      gas: ["timestamp", "gas_value", "sensor_type"],
+      button: ["timestamp", "button_state", "button_pressed", "sensor_type"],
+      moisture: ["timestamp", "moisture_value", "moisture_status", "sensor_type"]
+    };
+
+    // Active collection
+    let activeCollection = "distance";
+
+    async function loadData(collectionName) {
+      try {
+        document.querySelector('.loading').style.display = 'block';
+        
+        const snapshot = await getDocs(collection(db, collectionName));
+        const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        if (data.length === 0) {
+          document.querySelector('.loading').textContent = `No data found in ${collectionName}.`;
+          return;
+        }
+
+        document.querySelector('.loading').style.display = 'none';
+
+        const columnOrder = columnConfig[collectionName] || Object.keys(data[0]).filter(k => k !== 'id');
+
+        updateTable(collectionName, data, columnOrder);
+
+      } catch (err) {
+        document.querySelector('.loading').textContent = "Error: " + err.message;
+        console.error(err);
+      }
+    }
+
+    function updateTable(collectionName, data, columnOrder) {
+      const tableContainer = document.getElementById(`${collectionName}Table`);
+      const table = tableContainer.querySelector('table');
+      const thead = table.querySelector('thead tr');
+      const tbody = table.querySelector('tbody');
+      
+      thead.innerHTML = '';
+      tbody.innerHTML = '';
+
+      // Create headers
+      columnOrder.forEach(key => {
+        const th = document.createElement('th');
+        th.textContent = key.replace(/_/g, ' ').toUpperCase();
+        thead.appendChild(th);
+      });
+
+      const idTh = document.createElement('th');
+      idTh.textContent = 'ID';
+      thead.appendChild(idTh);
+
+      // Create rows
+      data.forEach(row => {
+        const tr = document.createElement('tr');
+        
+        // Add data columns
+        columnOrder.forEach(key => {
+          const td = document.createElement('td');
+          let value = row[key] || '';
+          
+          if (key === 'timestamp') {
+            value = formatTimestamp(value);
+          } else if (key === 'button_pressed') {
+            value = value ? 'YES' : 'NO';
+          } else if (key === 'button_state') {
+            value = value === 1 ? 'PRESSED' : 'NOT PRESSED';
+          }
+          
+          td.textContent = value;
+          tr.appendChild(td);
+        });
+
+        const idTd = document.createElement('td');
+        idTd.textContent = row.id.substring(0, 8) + '...';
+        idTd.style.color = '#666';
+        idTd.style.fontSize = '12px';
+        tr.appendChild(idTd);
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function formatTimestamp(timestamp) {
+      if (!timestamp) return 'N/A';
+      try {
+        const date = new Date(timestamp);
+        return date.toLocaleString();
+      } catch (e) {
+        return timestamp;
+      }
+    }
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        document.querySelectorAll('.table-container').forEach(container => {
+          container.classList.remove('active');
+        });
+        
+        const collectionName = tab.dataset.collection;
+        activeCollection = collectionName;
+        document.getElementById(`${collectionName}Table`).classList.add('active');
+        
+        // Load data for this collection
+        loadData(collectionName);
+      });
+    });
+
+    // Load initial data
+    loadData(activeCollection);
+  </script>
+</body>
+</html>
