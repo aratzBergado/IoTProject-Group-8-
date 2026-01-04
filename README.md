@@ -80,6 +80,7 @@ sudo apt install -y python3-pip python3-opencv python3-rpi.gpio
 ```bash
 pip install opencv-python paho-mqtt influxdb-client pandas firebase-admin mfrc522 grove.py
 ```
+Note: firebase libraries are for the local host (running the WebPage), the rest of them are Python dependencies for the system (Raspberry).
 
 #### WSL Dependencies
 ```bash
