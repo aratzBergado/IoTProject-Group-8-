@@ -47,3 +47,47 @@ Sensor data starts at the Raspberry Pi. The Pi sends data through MQTT to the WS
 Firebase stores data in several collections. Each sensor type has its own collection. User information and points have separate collections. This organization makes data easy to access and display.
 
 Local CSV files keep backup copies of all data. Sensor readings go to one CSV file. User information goes to another. Point history goes to a third file. This ensures no data gets lost if systems disconnect. Moreover, all these data are stored in InfluxDB too.
+
+## Usage
+
+### Clone the repository:
+```bash
+git clone https://github.com/aratzBergado/IoTProject-Group-8-.git
+```
+
+### Dependencies
+
+This project requires Python3 and the following libraries:
+
+- OpenCV
+- Paho MQTT
+- InfluxDB Client
+- Pandas
+- Firebase Admin SDK
+- MFRC522 RFID library
+- Grove sensor libraries
+
+Note: Some libraries (RPi.GPIO, Grove, MFRC522) are designed for the Raspberry Pi hardware (sensors). In order to run the code Firebase credentails are necessary. Contact us for more information.
+
+### Install Dependencies
+#### System Dependencies
+```bash
+sudo apt update
+sudo apt install -y python3-pip python3-opencv python3-rpi.gpio
+```
+
+#### Python Dependencies
+```bash
+pip install opencv-python paho-mqtt influxdb-client pandas firebase-admin mfrc522 grove.py
+```
+
+#### WSL Dependencies
+```bash
+sudo apt update
+sudo apt install inotify-tools
+```
+
+
+
+
+
